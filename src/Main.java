@@ -7,18 +7,25 @@ class Main {
 
   public static void main(String[] args) {
 
-    int[][] articles = new int[10][3];
-
-    // Print menu on screen
-    menu();
+    int[][] articles = new int[10][2];
+    int[] articleNumber = new int[1000];
+    int[] noOfArticles = new int[1000];
 
     while (true) {
       int choice = menu();
-      int value;
 
       switch (choice) {
         case 1:
-          System.out.println("Enter articles");
+          int articleArray[][];
+
+          System.out.println("DEBUG: Enter articles");
+          articleArray = insertArticles(articles, articleNumber, noOfArticles);
+
+          for (int i = 0; i < articleArray.length; i++) {
+            System.out.println("DEBUG: " + articleArray[i][0]);
+            System.out.println("DEBUG: " + articleArray[i][1]);
+            System.out.println("DEBUG: " + articleArray[i][2]);
+          }
           break;
         case 2:
           System.out.println("Delete article");
@@ -79,26 +86,43 @@ class Main {
     return input;
   }
 
-  public static int[][] insertArticles(int[][] articles, int articleNumber, int noOfArticles) {
+  public static int[][] insertArticles(int[][] articles, int[] articleNumber, int[] noOfArticles) {
 
-    int[][] newArticles = new int[10][3];
     int input;
+    int currentSizeOfTable;
+
+    currentSizeOfTable = articles.length;
 
     // Insert how many articles you want to add
     System.out.println("How many articles do you want to add?");
     input = input();
 
-    // Add item number, quantity and price
-    for (int i = 0; i < input; i++) {
-      System.out.println("Enter item number");
-      newArticles[i][0] = input();
-      System.out.println("Enter quantity");
-      newArticles[i][1] = input();
-      System.out.println("Enter price");
-      newArticles[i][2] = input();
+    if (input > currentSizeOfTable) {
+      System.out.println("The table is full");
+
+      // Increase the size of the table
+      articles = new int[currentSizeOfTable + input][3];
+
+      // Copy the old table to the new table
+      for (int i = 0; i < currentSizeOfTable; i++) {
+        articles[i][0] = articleNumber[i];
+        articles[i][1] = noOfArticles[i];
+      }
     }
 
-    return newArticles;
+    // Insert the new articles
+    for (int i = currentSizeOfTable; i < articles.length; i++) {
+      System.out.println("Enter article number");
+      articles[i][0] = input();
+
+      System.out.println("Enter quantity");
+      articles[i][1] = input();
+
+      System.out.println("Enter price");
+      articles[i][2] = input();
+    }
+
+    return articles;
   }
 
   public static int[][] checkFull(int[][] articles, int noOfArticles) {
