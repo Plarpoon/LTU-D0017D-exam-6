@@ -7,24 +7,69 @@ class Main {
 
   public static void main(String[] args) {
 
-    int[][] articles = new int[10][2];
-    int[] articleNumber = new int[1000];
-    int[] noOfArticles = new int[1000];
+    int articleNumber = 1000;
+    int noOfArticles = 10;
+    int price;
+    int ID;
+    int sum;
+
+    Date[] salesDate;
+    int[][] articles = new int[noOfArticles][articleNumber];
+    int[][] sales;
 
     while (true) {
       int choice = menu();
 
       switch (choice) {
-        case 1:
-          int articleArray[][];
+        case 1: // Enter articles.
 
-          System.out.println("DEBUG: Enter articles");
-          articleArray = insertArticles(articles, articleNumber, noOfArticles);
+          // Number of new articles to add
+          int newItems;
 
-          for (int i = 0; i < articleArray.length; i++) {
-            System.out.println("DEBUG: " + articleArray[i][0]);
-            System.out.println("DEBUG: " + articleArray[i][1]);
-            System.out.println("DEBUG: " + articleArray[i][2]);
+          System.out.println("How many articles would you like to add?");
+          newItems = input();
+
+          // Check if there is enough space in the matrix
+          if (articles.length < newItems) {
+            // Create a new matrix with the new size
+            int[][] NewArticles;
+
+            // Create a new matrix with the new size
+            NewArticles = new int[articles.length + newItems][articleNumber];
+
+            // Copy the old matrix to the new one
+            for (int i = 0; i < articles.length; i++) {
+              for (int j = 0; j < articles[i].length; j++) {
+                NewArticles[i][j] = articles[i][j];
+              }
+            }
+
+            // Assign the new matrix to the old one
+            articles = NewArticles;
+          }
+
+          // Enter the article number, quantity and price
+          for (int i = articleNumber; i < articleNumber + newItems; i++) {
+            System.out.println("Enter article ID number: ");
+            articles[i][0] = input();
+
+            System.out.println("Enter quantity: ");
+            articles[i][1] = input();
+
+            System.out.println("Enter price: ");
+            while (true) {
+              price = input();
+              if (price < 1000) {
+                System.out.println("Price must be at least 1000 SEK");
+              } else {
+                break;
+              }
+            }
+            articles[i][2] = input();
+
+            // Increment the article number
+            articleNumber += newItems;
+
           }
           break;
         case 2:
@@ -44,6 +89,7 @@ class Main {
           break;
         case 7:
           System.out.println("Exit");
+          System.exit(0);
           break;
         default:
           System.out.println("Invalid input, try again");
@@ -52,7 +98,7 @@ class Main {
     }
   }
 
-  public static int menu() {
+  private static int menu() {
     System.out.println("1. Enter articles");
     System.out.println("2. Delete article");
     System.out.println("3. View articles");
@@ -67,138 +113,41 @@ class Main {
     return choice;
   }
 
-  public static int input() {
+  private static int input() {
     int input = 0;
 
     while (true) {
-      if (scanner.hasNextInt()) {
-
-        // Use Math.abs() to avoid negative numbers
-        input = Math.abs(scanner.nextInt());
-        break;
+      if (scanner.hasNextInt() & (input = scanner.nextInt()) > 0) {
+        return input;
       } else {
-
         System.out.println("Invalid input, try again");
         scanner.next();
       }
     }
-
-    return input;
   }
 
-  public static int[][] insertArticles(int[][] articles, int[] articleNumber, int[] noOfArticles) {
-
-    int input;
-    int currentSizeOfTable;
-
-    currentSizeOfTable = articles.length;
-
-    // Insert how many articles you want to add
-    System.out.println("How many articles do you want to add?");
-    input = input();
-
-    if (input > currentSizeOfTable) {
-      System.out.println("The table is full");
-
-      // Increase the size of the table
-      articles = new int[currentSizeOfTable + input][3];
-
-      // Copy the old table to the new table
-      for (int i = 0; i < currentSizeOfTable; i++) {
-        articles[i][0] = articleNumber[i];
-        articles[i][1] = noOfArticles[i];
-      }
-    }
-
-    // Insert the new articles
-    for (int i = currentSizeOfTable; i < articles.length; i++) {
-      System.out.println("Enter article number");
-      articles[i][0] = input();
-
-      System.out.println("Enter quantity");
-      articles[i][1] = input();
-
-      System.out.println("Enter price");
-      articles[i][2] = input();
-    }
+  private static int[][] insertArticles(int[][] articles, int[] articleNumber, int[] noOfArticles) {
 
     return articles;
   }
 
-  public static int[][] checkFull(int[][] articles, int noOfArticles) {
-    int[][] newArticles = new int[10][3];
+  private static int[][] checkFull(int[][] articles, int noOfArticles) {
 
-    if (noOfArticles == 10) {
-      System.out.println("The table is full");
-      return newArticles;
-    } else {
-      return articles;
-    }
+    return articles;
   }
 
-  public static void removeArticle(int[][] articles) {
-    int input;
-
-    System.out.println("Enter item number");
-    input = input();
-
-    for (int i = 0; i < articles.length; i++) {
-      if (articles[i][0] == input) {
-        articles[i][0] = 0;
-        articles[i][1] = 0;
-        articles[i][2] = 0;
-      }
-    }
+  private static void removeArticle(int[][] articles) {
   }
 
-  public static void printArticles(int[][] articles) {
-    for (int i = 0; i < articles.length; i++) {
-      System.out.println("Item number: " + articles[i][0]);
-      System.out.println("Quantity: " + articles[i][1]);
-      System.out.println("Price: " + articles[i][2]);
-    }
+  private static void printArticles(int[][] articles) {
   }
 
-  public static void sellArticle(int[][] sales, Date[] salesDate, int[][] articles) {
-    int input;
-
-    System.out.println("Enter item number");
-    input = input();
-
-    for (int i = 0; i < articles.length; i++) {
-      if (articles[i][0] == input) {
-        sales[i][0] = articles[i][0];
-        sales[i][1] = articles[i][1];
-        sales[i][2] = articles[i][2];
-        salesDate[i] = new Date();
-      }
-    }
+  private static void sellArticle(int[][] sales, Date[] salesDate, int[][] articles) {
   }
 
-  public static void printSales(int[][] sales, Date[] salesDate) {
-    for (int i = 0; i < sales.length; i++) {
-      System.out.println("Item number: " + sales[i][0]);
-      System.out.println("Quantity: " + sales[i][1]);
-      System.out.println("Price: " + sales[i][2]);
-      System.out.println("Date: " + salesDate[i]);
-    }
+  private static void printSales(int[][] sales, Date[] salesDate) {
   }
 
-  public static void sortedTable(int[][] sales, Date[] salesDate) {
-    int[][] sortedSales = new int[10][3];
-    Date[] sortedSalesDate = new Date[10];
-
-    for (int i = 0; i < sales.length; i++) {
-      for (int j = 0; j < sales.length; j++) {
-        if (sales[i][0] < sales[j][0]) {
-          sortedSales[i][0] = sales[j][0];
-          sortedSales[i][1] = sales[j][1];
-          sortedSales[i][2] = sales[j][2];
-          sortedSalesDate[i] = salesDate[j];
-        }
-      }
-    }
-
-    printSales(sortedSales, sortedSalesDate);
+  private static void sortedTable(int[][] sales, Date[] salesDate) {
   }
 }
