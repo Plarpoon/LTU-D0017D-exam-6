@@ -3,7 +3,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 class Main {
-
   static Scanner scanner = new Scanner(System.in);
 
   public static void main(String[] args) {
@@ -11,9 +10,9 @@ class Main {
     final int articleNumber = 1000; // or ID
     final int noOfArticles = 10; // or quantity
 
-    Date[] salesDate = new Date[articleNumber];
+    Date[] salesDate = new Date[0];
     int[][] articles = new int[noOfArticles][articleNumber]; // using variables for array size
-    int[][] sales = new int[noOfArticles][articleNumber];
+    int[][] sales = new int[0][0];
 
     while (true) {
       int choice = menu();
@@ -96,18 +95,18 @@ class Main {
   }
 
   public static int[][] checkFull(int[][] articles, int noOfArticles, int noOfArticlesToAdd) {
-    // Check if matrix holds noOfArticlesToAdd amount of articles.
+    // Check how many empty or deleted articles there are in the matrix.
     int count = 0;
     for (int i = 0; i < articles.length; i++) {
-      if (articles[i][0] != 0) {
-        count++;
+      if (articles[i][0] == 0) {
+        count++; // Amount of deleted or empty articles in the already existing matrix.
       }
     }
 
-    if (count + noOfArticlesToAdd - 10 > noOfArticles) {
+    if (count < noOfArticlesToAdd) {
 
       // Create new matrix with more space.
-      int[][] newArticles = new int[noOfArticles + noOfArticlesToAdd][3];
+      int[][] newArticles = new int[noOfArticlesToAdd][3];
 
       // Copy old matrix to new matrix.
       for (int i = 0; i < articles.length; i++) {
@@ -147,57 +146,6 @@ class Main {
     }
   }
 
-  public static Date[] checkFullDate(Date[] salesDate, int noOfArticles) {
-    // Check if array holds noOfArticlesToAdd amount of articles.
-    int count = 0;
-    for (int i = 0; i < salesDate.length; i++) {
-      if (salesDate[i] != null) {
-        count++;
-      }
-    }
-
-    if (count > noOfArticles) {
-
-      // Create new array with more space.
-      Date[] newSalesDate = new Date[noOfArticles];
-
-      // Copy old array to new array.
-      for (int i = 0; i < salesDate.length; i++) {
-        newSalesDate[i] = salesDate[i];
-      }
-
-      return newSalesDate;
-    }
-
-    return salesDate;
-  }
-
-  public static int[][] checkFullSales(int[][] sales, int noOfArticles) {
-    // Check if matrix holds noOfArticlesToAdd amount of articles.
-    int count = 0;
-    for (int i = 0; i < sales.length; i++) {
-      if (sales[i][0] != 0) {
-        count++;
-      }
-    }
-
-    if (count > noOfArticles - 10) {
-
-      // Create new matrix with more space.
-      int[][] newSales = new int[noOfArticles][2];
-
-      // Copy old matrix to new matrix.
-      for (int i = 0; i < sales.length; i++) {
-        newSales[i][0] = sales[i][0];
-        newSales[i][1] = sales[i][1];
-      }
-
-      return newSales;
-    }
-
-    return sales;
-  }
-
   public static int[][] sellArticle(int[][] sales, Date[] salesDate, int[][] articles) {
     System.out.println("\nWhich article do you want to sell? ");
     int articleToSell = input();
@@ -205,11 +153,22 @@ class Main {
     System.out.println("\nHow many do you want to sell? ");
     int quantityToSell = input();
 
-    // Expand sales matrix to size of articles matrix.
-    sales = checkFullSales(sales, articles.length);
+    // Create new sales matrix with same size as articles.
+    int[][] newSales = new int[articles.length][2];
 
-    // Expand salesDate array to size of articles matrix.
-    salesDate = checkFullDate(salesDate, articles.length);
+    // Copy old sales matrix to new sales matrix.
+    for (int i = 0; i < sales.length; i++) {
+      newSales[i][0] = sales[i][0]; // Copy article number.
+      newSales[i][1] = sales[i][1]; // Copy quantity.
+    }
+
+    // Create new salesDate array with same size as articles.
+    Date[] newSalesDate = new Date[articles.length];
+
+    // Copy old salesDate array to new salesDate array.
+    for (int i = 0; i < salesDate.length; i++) {
+      newSalesDate[i] = salesDate[i];
+    }
 
     // Check if article exists in articles.
     // Check if quantity is available.
@@ -220,9 +179,9 @@ class Main {
       if (articles[i][0] == articleToSell) {
         if (articles[i][1] > quantityToSell) {
           articles[i][1] -= quantityToSell;
-          sales[i][0] = articleToSell;
-          sales[i][1] += quantityToSell;
-          salesDate[i] = new Date();
+          newSales[i][0] = articleToSell;
+          newSales[i][1] += quantityToSell;
+          newSalesDate[i] = new Date();
           break;
         } else if (articles[i][1] == quantityToSell) {
           // Remove article from articles.
