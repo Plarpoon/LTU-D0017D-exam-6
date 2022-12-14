@@ -1,3 +1,23 @@
+
+/**
+ * ===============================================================
+ * What does the program do:
+ * Must create a program that works as a sales register. The program
+ * must be able to add articles, delete articles, view articles, sell
+ * articles, print sales history, and sort the sales history.
+ * ===============================================================
+ * Pseudocode steps:
+ * 1. Print the menu
+ * 2. Read the input
+ * 3. Use a switch-case to access the different functions
+ * 4. Add every method the professor provided
+ * 5. Prepare random generators for the articles
+ * 6. Check that the methods described by professor work like he said
+ * ===============================================================
+ * Alessandro Suha
+ * alesuh-1
+ */
+
 import java.util.Date;
 import java.util.Random;
 import java.util.Scanner;
@@ -73,6 +93,7 @@ class Main {
     int input = 0;
 
     while (true) {
+      // Check if input is an integer.
       if (scanner.hasNextInt() & (input = scanner.nextInt()) > 0) {
         return input;
       } else {
@@ -86,6 +107,7 @@ class Main {
     System.out.println("\nPlease enter the number of articles you would like to add: ");
     int noOfArticlesToAdd = input();
 
+    // Add articles to the matrix.
     for (int j = 0; j < noOfArticlesToAdd; j++) {
       articles = checkFull(articles, noOfArticles, noOfArticlesToAdd);
       for (int i = 0; i < articles.length; i++) {
@@ -125,6 +147,7 @@ class Main {
       return newArticles;
     }
 
+    // Return old matrix if there is enough space.
     return articles;
   }
 
@@ -132,6 +155,7 @@ class Main {
     System.out.println("\nWhich article do you want to remove? ");
     int articleToRemove = input();
 
+    // Remove article from the matrix.
     for (int i = 0; i < articles.length; i++) {
       if (articles[i][0] == articleToRemove) {
         articles[i][0] = 0;
@@ -163,6 +187,7 @@ class Main {
       newSalesDate[i] = salesDate[i];
     }
 
+    // Update salesDate array.
     for (int i = 0; i < articles.length; i++) {
       if (articles[i][0] == articleToSell) {
         if (articles[i][1] >= quantityToSell) {
@@ -261,16 +286,19 @@ class Main {
     }
   }
 
+  // Generate random number.
   public static int randomNumber(int min, int max) {
     Random random = new Random();
     return random.nextInt(max - min) + min;
   }
 
+  // Generate random article number.
   public static int quantity() {
     int nrOfPieces = randomNumber(1, 10);
     return nrOfPieces;
   }
 
+  // Generate random price.
   public static int price() {
     int price = randomNumber(100, 1000);
     return price;
