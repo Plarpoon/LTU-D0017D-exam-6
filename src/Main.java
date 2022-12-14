@@ -12,7 +12,7 @@ class Main {
 
     Date[] salesDate = new Date[0];
     int[][] articles = new int[noOfArticles][articleNumber]; // using variables for array size
-    int[][] sales = new int[0][0];
+    int[][] sales = new int[noOfArticles][articleNumber];
 
     while (true) {
       int choice = menu();
@@ -35,7 +35,7 @@ class Main {
           int quantityToSell = input();
 
           sales = sellArticle(sales, salesDate, articles, articleToSell, quantityToSell);
-          salesDate = sellArticleDate(articles, salesDate, articleToSell, quantityToSell);
+          salesDate = sellArticleDate(articles, salesDate, articleToSell, quantityToSell, sales);
           break;
         case 5: // Print sales.
           printSales(sales, salesDate, articles);
@@ -153,9 +153,10 @@ class Main {
     }
   }
 
-  private static Date[] sellArticleDate(int[][] articles, Date[] salesDate, int articleToSell, int quantityToSell) {
-    // Create new salesDate array with same size as articles.
-    Date[] newSalesDate = new Date[articles.length];
+  private static Date[] sellArticleDate(int[][] articles, Date[] salesDate, int articleToSell, int quantityToSell,
+      int[][] sales) {
+    // Create new salesDate array with same size as sales.
+    Date[] newSalesDate = new Date[sales.length];
 
     // Copy old salesDate array to new salesDate array.
     for (int i = 0; i < salesDate.length; i++) {
@@ -180,7 +181,7 @@ class Main {
     int[][] newSales = new int[articles.length][2];
 
     // Copy old sales matrix to new sales matrix.
-    for (int i = 0; i < sales.length; i++) {
+    for (int i = 0; i < articles.length; i++) {
       newSales[i][0] = sales[i][0]; // Copy article number.
       newSales[i][1] = sales[i][1]; // Copy quantity.
     }
