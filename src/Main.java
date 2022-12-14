@@ -28,13 +28,20 @@ class Main {
           printArticles(articles);
           break;
         case 4: // Sell articles.
-          sales = sellArticle(sales, salesDate, articles);
+          System.out.println("\nWhich article do you want to sell? ");
+          int articleToSell = input();
+
+          System.out.println("\nHow many do you want to sell? ");
+          int quantityToSell = input();
+
+          sales = sellArticle(sales, salesDate, articles, articleToSell, quantityToSell);
+          salesDate = sellArticleDate(articles, salesDate, articleToSell, quantityToSell);
           break;
         case 5: // Print sales.
-          printSales(sales, salesDate);
+          printSales(sales, salesDate, articles);
           break;
         case 6: // Sort sale history.
-          sortedTable(sales, salesDate);
+          sortedTable(sales, salesDate, articles);
           break;
         case 7:
           System.out.println("Exit");
@@ -52,8 +59,8 @@ class Main {
     System.out.println("2. Delete article");
     System.out.println("3. View articles");
     System.out.println("4. Sell articles");
-    System.out.println("5. Order history");
-    System.out.println("6. Sort order history table");
+    System.out.println("5. Sell history");
+    System.out.println("6. Sort sell history table");
     System.out.println("7. Exit");
     System.out.println("Your choice: ");
 
@@ -146,12 +153,28 @@ class Main {
     }
   }
 
-  public static int[][] sellArticle(int[][] sales, Date[] salesDate, int[][] articles) {
-    System.out.println("\nWhich article do you want to sell? ");
-    int articleToSell = input();
+  private static Date[] sellArticleDate(int[][] articles, Date[] salesDate, int articleToSell, int quantityToSell) {
+    // Create new salesDate array with same size as articles.
+    Date[] newSalesDate = new Date[articles.length];
 
-    System.out.println("\nHow many do you want to sell? ");
-    int quantityToSell = input();
+    // Copy old salesDate array to new salesDate array.
+    for (int i = 0; i < salesDate.length; i++) {
+      newSalesDate[i] = salesDate[i];
+    }
+
+    for (int i = 0; i < articles.length; i++) {
+      if (articles[i][0] == articleToSell) {
+        if (articles[i][1] >= quantityToSell) {
+          newSalesDate[i] = new Date(System.currentTimeMillis());
+        }
+      }
+    }
+
+    return newSalesDate;
+  }
+
+  public static int[][] sellArticle(int[][] sales, Date[] salesDate, int[][] articles, int articleToSell,
+      int quantityToSell) {
 
     // Create new sales matrix with same size as articles.
     int[][] newSales = new int[articles.length][2];
@@ -160,14 +183,6 @@ class Main {
     for (int i = 0; i < sales.length; i++) {
       newSales[i][0] = sales[i][0]; // Copy article number.
       newSales[i][1] = sales[i][1]; // Copy quantity.
-    }
-
-    // Create new salesDate array with same size as articles.
-    Date[] newSalesDate = new Date[articles.length];
-
-    // Copy old salesDate array to new salesDate array.
-    for (int i = 0; i < salesDate.length; i++) {
-      newSalesDate[i] = salesDate[i];
     }
 
     // Check if article exists in articles.
@@ -181,7 +196,6 @@ class Main {
           articles[i][1] -= quantityToSell;
           newSales[i][0] = articleToSell;
           newSales[i][1] += quantityToSell;
-          newSalesDate[i] = new Date();
           break;
         } else if (articles[i][1] == quantityToSell) {
           // Remove article from articles.
@@ -194,12 +208,13 @@ class Main {
         }
       }
     }
-    return sales;
+    return newSales;
   }
 
-  public static void printSales(int[][] sales, Date[] salesDate) {
-    for (int i = 0; i < sales.length; i++) {
-      if (sales[i][0] != 0) {
+  public static void printSales(int[][] sales, Date[] salesDate, int[][] articles) {
+    // Print sales if salesDate is not null.
+    for (int i = 0; i < salesDate.length; i++) {
+      if (salesDate[i] != null) {
         System.out.println("Article number: " + sales[i][0]);
         System.out.println("Quantity: " + sales[i][1]);
         System.out.println("Date: " + salesDate[i]);
@@ -208,15 +223,39 @@ class Main {
     }
   }
 
-  public static void sortedTable(int[][] sales, Date[] salesDate) {
-    // Sort sales by article number.
-    for (int i = 0; i < sales.length; i++) {
-      for (int j = 0; j < sales.length; j++) {
-        if (sales[i][0] < sales[j][0]) {
-          int temp = sales[i][0];
-          sales[i][0] = sales[j][0];
-          sales[j][0] = temp;
+  public static void sortedTable(int[][] sales, Date[] salesDate, int[][] articles) {
+    // Bubble sort articles matrix.
+    // Sort by article number.
+    // Then print sales with article number, quantity and date.
+    int temp;
+    for (int i = 0; i < articles.length; i++) {
+      for (int j = 1; j < (articles.length - i); j++) {
+        if (articles[j - 1][0] > articles[j][0]) {
+          // Swap article number.
+          temp = articles[j - 1][0];
+          articles[j - 1][0] = articles[j][0];
+          articles[j][0] = temp;
+
+          // Swap quantity.
+          temp = articles[j - 1][1];
+          articles[j - 1][1] = articles[j][1];
+          articles[j][1] = temp;
+
+          // Swap price.
+          temp = articles[j - 1][2];
+          articles[j - 1][2] = articles[j][2];
+          articles[j][2] = temp;
         }
+      }
+    }
+
+    // Print sales if salesDate is not null.
+    for (int i = 0; i < salesDate.length; i++) {
+      if (salesDate[i] != null) {
+        System.out.println("Article number: " + sales[i][0]);
+        System.out.println("Quantity: " + sales[i][1]);
+        System.out.println("Date: " + salesDate[i]);
+        System.out.println();
       }
     }
   }
