@@ -114,40 +114,30 @@ class Main {
         if (articles[i][0] == 0) {
           ++articleNumber;
           articles[i][0] = articleNumber;
-          articles[i][1] = quantity();
-          articles[i][2] = price();
+          articles[i][1] = random(1000, 10000);
+          articles[i][2] = random(1, 100);
           break;
         }
       }
     }
+
     return articles;
   }
 
   public static int[][] checkFull(int[][] articles, int noOfArticles, int noOfArticlesToAdd) {
-    // Check how many empty or deleted articles there are in the matrix.
-    int count = 0;
-    for (int i = 0; i < articles.length; i++) {
-      if (articles[i][0] == 0) {
-        count++; // Amount of deleted or empty articles in the already existing matrix.
-      }
-    }
-
-    if (count < noOfArticlesToAdd) {
-
-      // Create new matrix with more space.
-      int[][] newArticles = new int[noOfArticlesToAdd][3];
-
-      // Copy old matrix to new matrix.
+    // Check if the matrix is full.
+    if (articles[noOfArticles - 1][0] != 0) {
+      noOfArticles += noOfArticlesToAdd;
+      int[][] temp = new int[noOfArticles][1000];
+      // Copy the old matrix to the new one.
       for (int i = 0; i < articles.length; i++) {
-        newArticles[i][0] = articles[i][0];
-        newArticles[i][1] = articles[i][1];
-        newArticles[i][2] = articles[i][2];
+        for (int j = 0; j < articles[i].length; j++) {
+          temp[i][j] = articles[i][j];
+        }
       }
-
-      return newArticles;
+      articles = temp;
     }
 
-    // Return old matrix if there is enough space.
     return articles;
   }
 
@@ -287,20 +277,8 @@ class Main {
   }
 
   // Generate random number.
-  public static int randomNumber(int min, int max) {
+  public static int random(int min, int max) {
     Random random = new Random();
-    return random.nextInt(max - min) + min;
-  }
-
-  // Generate random article number.
-  public static int quantity() {
-    int nrOfPieces = randomNumber(1, 10);
-    return nrOfPieces;
-  }
-
-  // Generate random price.
-  public static int price() {
-    int price = randomNumber(100, 1000);
-    return price;
+    return random.nextInt((max - min) + 1) + min;
   }
 }
