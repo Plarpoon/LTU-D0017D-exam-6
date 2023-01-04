@@ -107,21 +107,25 @@ class Main {
     System.out.println("\nPlease enter the number of articles you would like to add: ");
     int noOfArticlesToAdd = input();
 
-    // Add articles to the matrix.
-    for (int j = 0; j < noOfArticlesToAdd; j++) {
-      articles = checkFull(articles, noOfArticles, noOfArticlesToAdd);
-      for (int i = 0; i < articles.length; i++) {
-        if (articles[i][0] == 0) {
-          ++articleNumber;
-          articles[i][0] = articleNumber;
-          articles[i][1] = random(1000, 10000);
-          articles[i][2] = random(1, 100);
-          break;
-        }
+    // Create a new 2D array with the desired size.
+    int[][] newArticles = new int[articles.length + noOfArticlesToAdd][articleNumber];
+
+    // Copy elements from the old array to the new array.
+    for (int i = 0; i < articles.length; i++) {
+      for (int j = 0; j < articleNumber; j++) {
+        newArticles[i][j] = articles[i][j];
       }
     }
 
-    return articles;
+    // Add the new articles to the new array.
+    Random random = new Random();
+    for (int i = articles.length; i < newArticles.length; i++) {
+      for (int j = 0; j < articleNumber; j++) {
+        newArticles[i][j] = random.nextInt(100);
+      }
+    }
+
+    return newArticles;
   }
 
   public static int[][] checkFull(int[][] articles, int noOfArticles, int noOfArticlesToAdd) {
