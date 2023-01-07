@@ -107,6 +107,15 @@ class Main {
     System.out.println("\nPlease enter the number of articles you would like to add: ");
     int noOfArticlesToAdd = input();
 
+    int highestArticleNumber = 1000;
+
+    // Find the highest article number in the array
+    for (int i = 0; i < articles.length; i++) {
+      if (articles[i][0] > highestArticleNumber) {
+        highestArticleNumber = articles[i][0];
+      }
+    }
+
     for (int i = 0; i < noOfArticlesToAdd; i++) {
       // Generate random values for quantity and price.
       int newQuantity = generateQuantity();
@@ -116,13 +125,14 @@ class Main {
       articles = checkFull(articles);
       for (int j = 0; j < articles.length; j++) {
         if (articles[j][0] == 0) {
-          articles[j][0] = 1000 + i + 1; // New article number is 1000 + 1 + the number of times this loop has run
+          articles[j][0] = highestArticleNumber + i + 1; // New article number is the highest article number + i + 1
           articles[j][1] = newQuantity;
           articles[j][2] = newPrice;
           break;
         }
       }
     }
+
     return articles;
   }
 
