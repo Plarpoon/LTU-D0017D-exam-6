@@ -182,30 +182,37 @@ class Main {
     }
   }
 
-  private static Date[] sellArticleDate(int[][] articles, Date[] salesDate, int articleToSell, int quantityToSell,
+  public static Date[] sellArticleDate(int[][] articles, Date[] salesDate, int articleToSell, int quantityToSell,
       int[][] sales) {
-    // Create new salesDate array with same size as sales.
-    Date[] newSalesDate = new Date[sales.length];
-
-    // Copy old salesDate array to new salesDate array.
-    for (int i = 0; i < salesDate.length; i++) {
-      newSalesDate[i] = salesDate[i];
+    // Check if the article exists.
+    if (articles[articleToSell - 1000][0] == 0) {
+      System.out.println("\nArticle not found");
+      return salesDate;
     }
 
-    // Update salesDate array.
-    for (int i = 0; i < articles.length; i++) {
-      if (articles[i][0] == articleToSell) {
-        if (articles[i][1] >= quantityToSell) {
-          newSalesDate[i] = new Date(System.currentTimeMillis());
-        }
-      }
+    // Check if there is enough quantity to sell.
+    if (articles[articleToSell - 1000][1] < quantityToSell) {
+      System.out.println("\nNot enough quantity");
+      return salesDate;
     }
 
+    // Add current date to the end of the salesDate array.
+    Date[] newSalesDate = new Date[salesDate.length + 1];
+    System.arraycopy(salesDate, 0, newSalesDate, 0, salesDate.length);
+    newSalesDate[salesDate.length] = new Date();
     return newSalesDate;
   }
 
   public static int[][] sellArticle(int[][] sales, Date[] salesDate, int[][] articles, int articleToSell,
       int quantityToSell) {
+    // Check if the index being accessed is within the bounds of the array
+    if (articleToSell >= sales.length) {
+      // Create a new, larger array and copy the data from the old array into the new
+      // one
+      int[][] newSales = new int[articleToSell + 1][articles[0].length];
+      System.arraycopy(sales, 0, newSales, 0, sales.length);
+      sales = newSales;
+    }
 
     // Create new sales matrix with same size as articles.
     int[][] newSales = new int[articles.length][2];
