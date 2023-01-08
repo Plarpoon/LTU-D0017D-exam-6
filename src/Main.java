@@ -94,7 +94,7 @@ class Main {
 
     while (true) {
       // Check if input is a natural integer positive number.
-      if (scanner.hasNextInt() & (input = scanner.nextInt()) > 0) {
+      if (scanner.hasNextInt() && (input = scanner.nextInt()) > 0) {
         return input;
       } else {
         System.out.println("Invalid input, try again");
