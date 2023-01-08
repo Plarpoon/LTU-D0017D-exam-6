@@ -238,12 +238,27 @@ class Main {
       sales = newSales;
     }
 
+    // Check if the requested quantity is greater than the current quantity.
+    if (quantityToSell > articles[articleIndex][1]) {
+      // Sell the remaining quantity.
+      quantityToSell = articles[articleIndex][1];
+    }
+
     // Update the sales array with the ID and quantity of the sold article.
     sales[articleIndex][0] = articleToSell;
     sales[articleIndex][1] += quantityToSell;
 
     // Decrement the quantity of the sold article in the articles array.
     articles[articleIndex][1] -= quantityToSell;
+
+    // Check if the quantity of the sold article is 0 or negative.
+    if (articles[articleIndex][1] <= 0) {
+      // Remove the article from the articles array.
+      int[][] newArticles = new int[articles.length - 1][2];
+      System.arraycopy(articles, 0, newArticles, 0, articleIndex);
+      System.arraycopy(articles, articleIndex + 1, newArticles, articleIndex, articles.length - articleIndex - 1);
+      articles = newArticles;
+    }
 
     return sales;
   }
