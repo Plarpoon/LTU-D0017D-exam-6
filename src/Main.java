@@ -93,7 +93,7 @@ class Main {
     int input = 0;
 
     while (true) {
-      // Check if input is an integer.
+      // Check if input is a natural integer positive number.
       if (scanner.hasNextInt() & (input = scanner.nextInt()) > 0) {
         return input;
       } else {
@@ -236,6 +236,11 @@ class Main {
       int[][] newSales = new int[articleIndex + 1][2];
       System.arraycopy(sales, 0, newSales, 0, sales.length);
       sales = newSales;
+
+      // Increase the size of the salesDate array.
+      Date[] newSalesDate = new Date[articleIndex + 1];
+      System.arraycopy(salesDate, 0, newSalesDate, 0, salesDate.length);
+      salesDate = newSalesDate;
     }
 
     // Check if the requested quantity is greater than the current quantity.
@@ -258,6 +263,12 @@ class Main {
       System.arraycopy(articles, 0, newArticles, 0, articleIndex);
       System.arraycopy(articles, articleIndex + 1, newArticles, articleIndex, articles.length - articleIndex - 1);
       articles = newArticles;
+
+      // Remove the date for the article from the salesDate array.
+      Date[] newSalesDate = new Date[salesDate.length - 1];
+      System.arraycopy(salesDate, 0, newSalesDate, 0, articleIndex);
+      System.arraycopy(salesDate, articleIndex + 1, newSalesDate, articleIndex, salesDate.length - articleIndex - 1);
+      salesDate = newSalesDate;
     }
 
     return sales;
