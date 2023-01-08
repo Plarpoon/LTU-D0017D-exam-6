@@ -184,69 +184,63 @@ class Main {
 
   public static Date[] sellArticleDate(int[][] articles, Date[] salesDate, int articleToSell, int quantityToSell,
       int[][] sales) {
-    // Check if the article exists.
-    if (articles[articleToSell - 1000][0] == 0) {
-      System.out.println("\nArticle not found");
-      return salesDate;
+    // Create a new Date object for the current sale
+    Date saleDate = new Date();
+
+    // Create a new array to store the updated sales dates
+    Date[] updatedSalesDates = new Date[salesDate.length + 1];
+
+    // Copy the old sales dates into the new array
+    for (int i = 0; i < salesDate.length; i++) {
+      updatedSalesDates[i] = salesDate[i];
     }
 
-    // Check if there is enough quantity to sell.
-    if (articles[articleToSell - 1000][1] < quantityToSell) {
-      System.out.println("\nNot enough quantity");
-      return salesDate;
-    }
+    // Add the new sale date to the end of the array
+    updatedSalesDates[salesDate.length] = saleDate;
 
-    // Add current date to the end of the salesDate array.
-    Date[] newSalesDate = new Date[salesDate.length + 1];
-    System.arraycopy(salesDate, 0, newSalesDate, 0, salesDate.length);
-    newSalesDate[salesDate.length] = new Date();
-    return newSalesDate;
+    return updatedSalesDates;
   }
 
   public static int[][] sellArticle(int[][] sales, Date[] salesDate, int[][] articles, int articleToSell,
       int quantityToSell) {
-    // Check if the index being accessed is within the bounds of the array
-    if (articleToSell >= sales.length) {
-      // Create a new, larger array and copy the data from the old array into the new
-      // one
-      int[][] newSales = new int[articleToSell + 1][articles[0].length];
-      System.arraycopy(sales, 0, newSales, 0, sales.length);
-      sales = newSales;
-    }
-
-    // Create new sales matrix with same size as articles.
-    int[][] newSales = new int[articles.length][2];
-
-    // Copy old sales matrix to new sales matrix.
-    for (int i = 0; i < articles.length; i++) {
-      newSales[i][0] = sales[i][0]; // Copy article number.
-      newSales[i][1] = sales[i][1]; // Copy quantity.
-    }
-
-    // Check if article exists in articles.
-    // Check if quantity is available.
-    // If quantity is available, subtract quantity from articles.
-    // Add article and quantity to sales.
-    // Add date to salesDate.
+    // Find the index of the article in the articles array
+    int index = -1;
     for (int i = 0; i < articles.length; i++) {
       if (articles[i][0] == articleToSell) {
-        if (articles[i][1] > quantityToSell) {
-          articles[i][1] -= quantityToSell;
-          newSales[i][0] = articleToSell;
-          newSales[i][1] += quantityToSell;
-          break;
-        } else if (articles[i][1] == quantityToSell) {
-          // Remove article from articles.
-          articles[i][0] = 0;
-          articles[i][1] = 0;
-          articles[i][2] = 0;
-        } else {
-          System.out.println("Not enough articles in stock\n");
-          break;
-        }
+        index = i;
+        break;
       }
     }
-    return newSales;
+
+    // Check if the article was found
+    if (index == -1) {
+      System.out.println("Article not found");
+      return sales;
+    }
+
+    // Check if there is enough quantity available to sell
+    if (articles[index][1] < quantityToSell) {
+      System.out.println("Not enough quantity available");
+      return sales;
+    }
+
+    // Create a new array to store the updated sales data
+    int[][] updatedSales = new int[sales.length + 1][2];
+
+    // Copy the old sales data into the new array
+    for (int i = 0; i < sales.length; i++) {
+      updatedSales[i][0] = sales[i][0];
+      updatedSales[i][1] = sales[i][1];
+    }
+
+    // Add the new sale to the end of the array
+    updatedSales[sales.length][0] = articleToSell;
+    updatedSales[sales.length][1] = quantityToSell;
+
+    // Update the quantity available for the sold article
+    articles[index][1] -= quantityToSell;
+
+    return updatedSales;
   }
 
   public static void printSales(int[][] sales, Date[] salesDate, int[][] articles) {
